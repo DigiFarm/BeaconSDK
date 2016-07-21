@@ -1,21 +1,32 @@
 //
 //  AppDelegate.swift
-//  BeaconSDK
+//  BeaconSDKTestClient
 //
-//  Created by Paul Himes on 07/19/2016.
-//  Copyright (c) 2016 Paul Himes. All rights reserved.
+//  Created by Paul Himes on 3/9/16.
+//  Copyright © 2016 Glacial Ridge Technologies. All rights reserved.
 //
 
 import UIKit
+import BeaconSDK
+
+let beaconStringNotification = Notification<String>(name: "BeaconString")
+let beaconGGANotification = Notification<GGA>(name: "BeaconGGA")
+let beaconVTGNotification = Notification<VTG>(name: "BeaconVTG")
+let beaconGSVNotification = Notification<GSV>(name: "BeaconGSV")
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
-
+    
+    private let receiver = BeaconReceiver()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        receiver.delegate = self
+        receiver.start()
+        
         return true
     }
 
@@ -42,5 +53,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+}
+
+extension AppDelegate: BeaconReceiverDelegate {
+    
+    func receiver(receiver: BeaconReceiver, parsedString string: String) {
+        postNotification(beaconStringNotification, value: string)
+    }
+    
+    func receiver(receiver: BeaconReceiver, parsedGGA gga: GGA) {
+        postNotification(beaconGGANotification, value: gga)
+    }
+    
+    func receiver(receiver: BeaconReceiver, parsedVTG vtg: VTG) {
+        postNotification(beaconVTGNotification, value: vtg)
+    }
+    
+    func receiver(receiver: BeaconReceiver, parsedGSV gsv: GSV) {
+        postNotification(beaconGSVNotification, value: gsv)
+    }
 }
 
