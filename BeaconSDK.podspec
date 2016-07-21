@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'BeaconSDK'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of BeaconSDK.'
+  s.summary          = 'iOS SDK for receiving NMEA data from the DigiFarm NTRIP Client app.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,14 +18,14 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+The DigiFarm NTRIP Client app is used to deliver RTK corrections data to the GRTech Beacon V3.0 family of devices. This SDK allows your iOS app to receive NMEA data from the Beacon through the DigiFarm Client app.
                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/BeaconSDK'
+  s.homepage         = 'https://github.com/DigiFarm/BeaconSDK'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Paul Himes' => 'paul@paulhimes.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/BeaconSDK.git', :tag => s.version.to_s }
+  s.license          = { :type => 'Apache-2.0', :file => 'LICENSE' }
+  s.author           = { 'Paul Himes' => 'digifarm@tinwhistlellc.com' }
+  s.source           = { :git => 'https://github.com/DigiFarm/BeaconSDK.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'

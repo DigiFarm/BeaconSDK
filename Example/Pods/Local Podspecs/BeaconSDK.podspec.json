@@ -1,0 +1,22 @@
+{
+  "name": "BeaconSDK",
+  "version": "0.1.0",
+  "summary": "A short description of BeaconSDK.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/<GITHUB_USERNAME>/BeaconSDK",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Paul Himes": "paul@paulhimes.com"
+  },
+  "source": {
+    "git": "https://github.com/<GITHUB_USERNAME>/BeaconSDK.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "BeaconSDK/Classes/**/*"
+}

@@ -1,6 +1,6 @@
 # BeaconSDK
 
-[![CI Status](http://img.shields.io/travis/Paul Himes/BeaconSDK.svg?style=flat)](https://travis-ci.org/Paul Himes/BeaconSDK)
+<!--- [![CI Status](http://img.shields.io/travis/Paul Himes/BeaconSDK.svg?style=flat)](https://travis-ci.org/Paul Himes/BeaconSDK) --->
 [![Version](https://img.shields.io/cocoapods/v/BeaconSDK.svg?style=flat)](http://cocoapods.org/pods/BeaconSDK)
 [![License](https://img.shields.io/cocoapods/l/BeaconSDK.svg?style=flat)](http://cocoapods.org/pods/BeaconSDK)
 [![Platform](https://img.shields.io/cocoapods/p/BeaconSDK.svg?style=flat)](http://cocoapods.org/pods/BeaconSDK)
@@ -22,8 +22,8 @@ pod "BeaconSDK"
 
 ## Author
 
-Paul Himes, paul@paulhimes.com
+Paul Himes, digifarm@tinwhistlellc.com
 
 ## License
 
-BeaconSDK is available under the MIT license. See the LICENSE file for more info.
+BeaconSDK is available under the Apache 2.0 license. See the LICENSE file for more info.

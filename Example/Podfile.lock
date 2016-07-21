@@ -1,0 +1,16 @@
+PODS:
+  - BeaconSDK (0.1.0)
+
+DEPENDENCIES:
+  - BeaconSDK (from `../`)
+
+EXTERNAL SOURCES:
+  BeaconSDK:
+    :path: ../
+
+SPEC CHECKSUMS:
+  BeaconSDK: cf540a4d4b5c8dde9a94977645394e267e8eeadd
+
+PODFILE CHECKSUM: b98f0c9a0c06e2d285826121f1a2ff3944fba340
+
+COCOAPODS: 1.0.1
