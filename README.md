@@ -7,9 +7,9 @@
 
 The DigiFarm NTRIP Client app is used to deliver RTK corrections data to the GRTech Beacon V3.0 family of devices. This SDK allows your iOS app to receive NMEA data from the Beacon through the DigiFarm Client app.
 
-## Example
+## Requirements
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+* iOS 8+
 
 ## How to Receive NMEA data using the Beacon SDK
 
@@ -26,6 +26,38 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "BeaconSDK"
 ```
+
+## Usage
+
+```Swift
+import BeaconSDK
+
+class MyClass: BeaconReceiverDelegate {
+
+    let let receiver = BeaconReceiver()
+
+    func receiver(receiver: BeaconReceiver, parsedString string: String) {
+        // Handle raw NMEA string data here.
+    }
+
+    func receiver(receiver: BeaconReceiver, parsedGGA gga: GGA) {
+        // Handle a persed GGA sentence struct here.
+    }
+
+    func receiver(receiver: BeaconReceiver, parsedVTG vtg: VTG) {
+        // Handle a persed VTG sentence struct here.
+    }
+
+    func receiver(receiver: BeaconReceiver, parsedGSV gsv: GSV) {
+        // Handle a persed GSV sentence struct here.
+    }
+
+}
+```
+
+## Example
+
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Author
 
