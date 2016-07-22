@@ -36,6 +36,11 @@ class MyClass: BeaconReceiverDelegate {
 
     let let receiver = BeaconReceiver()
 
+    func beginReceiving() {
+        receiver.delegate = self
+        receiver.start()
+    }
+
     func receiver(receiver: BeaconReceiver, parsedString string: String) {
         // Handle raw NMEA string data here.
     }
