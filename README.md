@@ -46,15 +46,15 @@ class MyClass: BeaconReceiverDelegate {
     }
 
     func receiver(receiver: BeaconReceiver, parsedGGA gga: GGA) {
-        // Handle a persed GGA sentence struct here.
+        // Handle a parsed GGA sentence struct here.
     }
 
     func receiver(receiver: BeaconReceiver, parsedVTG vtg: VTG) {
-        // Handle a persed VTG sentence struct here.
+        // Handle a parsed VTG sentence struct here.
     }
 
     func receiver(receiver: BeaconReceiver, parsedGSV gsv: GSV) {
-        // Handle a persed GSV sentence struct here.
+        // Handle a parsed GSV sentence struct here.
     }
 
 }
