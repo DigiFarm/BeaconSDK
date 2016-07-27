@@ -34,7 +34,7 @@ import BeaconSDK
 
 class MyClass: BeaconReceiverDelegate {
 
-    let let receiver = BeaconReceiver()
+    let receiver = BeaconReceiver()
 
     func beginReceiving() {
         receiver.delegate = self
