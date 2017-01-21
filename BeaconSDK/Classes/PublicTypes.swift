@@ -8,18 +8,18 @@
 
 import CoreLocation
 
-public class GGA: NSObject {
-    public let nmeaString: String
-    public let utcTime: NSDate?
-    public let latitude: Double?
-    public let longitude: Double?
-    public let gpsQuality: GPSQuality?
-    public let numberOfSVsInUse: Int?
-    public let hdop: Double?
-    public let orthometricHeight: Double?
-    public let geoidSeparation: Double?
-    public let ageOfDifferentialGPSDataRecord: Double?
-    public let referenceStationId: Int?
+open class GGA: NSObject {
+    open let nmeaString: String
+    open let utcTime: Date?
+    open let latitude: Double?
+    open let longitude: Double?
+    open let gpsQuality: GPSQuality?
+    open let numberOfSVsInUse: Int?
+    open let hdop: Double?
+    open let orthometricHeight: Double?
+    open let geoidSeparation: Double?
+    open let ageOfDifferentialGPSDataRecord: Double?
+    open let referenceStationId: Int?
     
     init?(nmeaString: String) {
         self.nmeaString = nmeaString
@@ -41,7 +41,7 @@ public class GGA: NSObject {
             return nil
         }
         
-        if fields[0].lowercaseString != "gpgga" {
+        if fields[0].lowercased() != "gpgga" {
             self.utcTime = nil
             self.latitude = nil
             self.longitude = nil
@@ -56,21 +56,21 @@ public class GGA: NSObject {
             return nil
         }
         
-        let timeFormatter = NSDateFormatter()
+        let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HHmmss.SS"
-        timeFormatter.timeZone = NSTimeZone(name: "UTC")
-        let time = timeFormatter.dateFromString(fields[1])
+        timeFormatter.timeZone = TimeZone(identifier: "UTC")
+        let time = timeFormatter.date(from: fields[1])
         
-        let numberFormatter = NSNumberFormatter()
+        let numberFormatter = NumberFormatter()
         
         var latitude: Double?
-        if let degreesMinutesLatitude = numberFormatter.numberFromString(fields[2]) {
+        if let degreesMinutesLatitude = numberFormatter.number(from: fields[2]) {
             let degrees = floor(degreesMinutesLatitude.doubleValue / 100)
             let minutes = degreesMinutesLatitude.doubleValue - degrees * 100
             latitude = (degrees + minutes / 60) * (fields[3] == "N" ? 1 : -1)
         }
         var longitude: Double?
-        if let degreesMinutesLongitude = numberFormatter.numberFromString(fields[4]) {
+        if let degreesMinutesLongitude = numberFormatter.number(from: fields[4]) {
             let degrees = floor(degreesMinutesLongitude.doubleValue / 100)
             let minutes = degreesMinutesLongitude.doubleValue - degrees * 100
             longitude = (degrees + minutes / 60) * (fields[5] == "E" ? 1 : -1)
@@ -83,15 +83,15 @@ public class GGA: NSObject {
         
         let numberOfSpaceVehicles = Int(fields[7])
         
-        let horizontalDilutionOfPrecision = numberFormatter.numberFromString(fields[8])?.doubleValue
+        let horizontalDilutionOfPrecision = numberFormatter.number(from: fields[8])?.doubleValue
         
-        let heightOfAntennaAboveMeanSeaLevel = numberFormatter.numberFromString(fields[9])?.doubleValue
+        let heightOfAntennaAboveMeanSeaLevel = numberFormatter.number(from: fields[9])?.doubleValue
         
-        let heightOfGeoidAboveEllipsoid = numberFormatter.numberFromString(fields[11])?.doubleValue
+        let heightOfGeoidAboveEllipsoid = numberFormatter.number(from: fields[11])?.doubleValue
         
-        let ageOfDifferentialGPSDataRecord = numberFormatter.numberFromString(fields[13])?.doubleValue
+        let ageOfDifferentialGPSDataRecord = numberFormatter.number(from: fields[13])?.doubleValue
         
-        let baseStationId = numberFormatter.numberFromString(fields[14])?.integerValue
+        let baseStationId = numberFormatter.number(from: fields[14])?.intValue
         
         self.utcTime = time
         self.latitude = latitude
@@ -111,15 +111,15 @@ public class GGA: NSObject {
         self.init(nmeaString: NMEA.buildGGAStringWithLocation(location))
     }
     
-    override public var description: String {
+    override open var description: String {
         var description = ""
         
         if utcTime != nil {
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = .NoStyle
-            formatter.timeStyle = .LongStyle
-            formatter.timeZone = NSTimeZone(name: "UTC")
-            description += "utcTime = \(formatter.stringFromDate(utcTime!))\n"
+            let formatter = DateFormatter()
+            formatter.dateStyle = .none
+            formatter.timeStyle = .long
+            formatter.timeZone = TimeZone(identifier: "UTC")
+            description += "utcTime = \(formatter.string(from: utcTime!))\n"
         }
         
         if latitude != nil {
@@ -163,41 +163,41 @@ public class GGA: NSObject {
 }
 
 @objc public enum GPSQuality: Int, CustomStringConvertible {
-    case FixNotValid = 0
-    case GPSFix = 1
-    case DifferentialGPSFix = 2
-    case PPSFix = 3
-    case RealTimeKinematicFixedIntegers = 4
-    case RealTimeKinematicFloatIntegers = 5
-    case EstimatedFix = 6
-    case ManualInputMode = 7
-    case SimulationMode = 8
-    case WAASFix = 9
+    case fixNotValid = 0
+    case gpsFix = 1
+    case differentialGPSFix = 2
+    case ppsFix = 3
+    case realTimeKinematicFixedIntegers = 4
+    case realTimeKinematicFloatIntegers = 5
+    case estimatedFix = 6
+    case manualInputMode = 7
+    case simulationMode = 8
+    case waasFix = 9
     
     public var description: String {
         get {
             var description = ""
             
             switch self {
-            case FixNotValid:
+            case .fixNotValid:
                 description += "Not Valid"
-            case GPSFix:
+            case .gpsFix:
                 description += "GPS"
-            case DifferentialGPSFix:
+            case .differentialGPSFix:
                 description += "DGPS"
-            case PPSFix:
+            case .ppsFix:
                 description += "PPS Fix"
-            case RealTimeKinematicFixedIntegers:
+            case .realTimeKinematicFixedIntegers:
                 description += "RTK Fixed Integers"
-            case RealTimeKinematicFloatIntegers:
+            case .realTimeKinematicFloatIntegers:
                 description += "RTK Float Integers"
-            case EstimatedFix:
+            case .estimatedFix:
                 description += "Estimated"
-            case ManualInputMode:
+            case .manualInputMode:
                 description += "Manual Input"
-            case SimulationMode:
+            case .simulationMode:
                 description += "Simulation"
-            case WAASFix:
+            case .waasFix:
                 description += "WAAS"
             }
             
@@ -206,12 +206,12 @@ public class GGA: NSObject {
     }
 }
 
-public class VTG: NSObject {
-    public let nmeaString: String
-    public let trueTrackMadeGoodDegrees: Double?
-    public let magneticTrackMadeGoodDegrees: Double?
-    public let speedOverGroundInKnots: Double?
-    public let speedOverGroundInKilometersPerHour: Double?
+open class VTG: NSObject {
+    open let nmeaString: String
+    open let trueTrackMadeGoodDegrees: Double?
+    open let magneticTrackMadeGoodDegrees: Double?
+    open let speedOverGroundInKnots: Double?
+    open let speedOverGroundInKilometersPerHour: Double?
     
     init?(nmeaString: String) {
         self.nmeaString = nmeaString
@@ -227,7 +227,7 @@ public class VTG: NSObject {
             return nil
         }
         
-        if fields[0].lowercaseString != "gpvtg" {
+        if fields[0].lowercased() != "gpvtg" {
             self.trueTrackMadeGoodDegrees = nil
             self.magneticTrackMadeGoodDegrees = nil
             self.speedOverGroundInKnots = nil
@@ -236,15 +236,15 @@ public class VTG: NSObject {
             return nil
         }
         
-        let numberFormatter = NSNumberFormatter()
+        let numberFormatter = NumberFormatter()
         
-        let trueTrackMadeGoodDegrees = numberFormatter.numberFromString(fields[1])?.doubleValue
+        let trueTrackMadeGoodDegrees = numberFormatter.number(from: fields[1])?.doubleValue
         
-        let magneticTrackMadeGoodDegrees = numberFormatter.numberFromString(fields[3])?.doubleValue
+        let magneticTrackMadeGoodDegrees = numberFormatter.number(from: fields[3])?.doubleValue
         
-        let speedOverGroundInKnots = numberFormatter.numberFromString(fields[5])?.doubleValue
+        let speedOverGroundInKnots = numberFormatter.number(from: fields[5])?.doubleValue
         
-        let speedOverGroundInKilometersPerHour = numberFormatter.numberFromString(fields[7])?.doubleValue
+        let speedOverGroundInKilometersPerHour = numberFormatter.number(from: fields[7])?.doubleValue
         
         self.trueTrackMadeGoodDegrees = trueTrackMadeGoodDegrees
         self.magneticTrackMadeGoodDegrees = magneticTrackMadeGoodDegrees
@@ -254,7 +254,7 @@ public class VTG: NSObject {
         super.init()
     }
     
-    override public var description: String {
+    override open var description: String {
         var description = ""
         
         if trueTrackMadeGoodDegrees != nil {
@@ -277,11 +277,11 @@ public class VTG: NSObject {
     }
 }
 
-public class GSVSatellite: NSObject {
-    public let prnNumber: Int
-    public let elevationDegree: Int
-    public let azimuthDegree: Int
-    public let signalToNoiseRatio: Int?
+open class GSVSatellite: NSObject {
+    open let prnNumber: Int
+    open let elevationDegree: Int
+    open let azimuthDegree: Int
+    open let signalToNoiseRatio: Int?
     
     init(prnNumber: Int, elevationDegree: Int, azimuthDegree: Int, signalToNoiseRatio: Int?) {
         self.prnNumber = prnNumber
@@ -290,7 +290,7 @@ public class GSVSatellite: NSObject {
         self.signalToNoiseRatio = signalToNoiseRatio
     }
     
-    override public var description: String {
+    override open var description: String {
         var description = ""
         
         description += "prnNumber = \(prnNumber)\n"
@@ -305,12 +305,12 @@ public class GSVSatellite: NSObject {
     }
 }
 
-public class GSV: NSObject {
-    public let nmeaString: String
-    public let totalNumberOfMessagesInThisCycle: Int?
-    public let messageNumber: Int?
-    public let totalNumberOfSVsVisible: Int?
-    public let gsvSatellites: [GSVSatellite]?
+open class GSV: NSObject {
+    open let nmeaString: String
+    open let totalNumberOfMessagesInThisCycle: Int?
+    open let messageNumber: Int?
+    open let totalNumberOfSVsVisible: Int?
+    open let gsvSatellites: [GSVSatellite]?
     
     
     init?(nmeaString: String) {
@@ -322,56 +322,56 @@ public class GSV: NSObject {
             return nil
         }
         
-        if fields[0].lowercaseString != "gpgsv" {
+        if fields[0].lowercased() != "gpgsv" {
             return nil
         }
         
-        let numberFormatter = NSNumberFormatter()
+        let numberFormatter = NumberFormatter()
         
-        totalNumberOfMessagesInThisCycle = numberFormatter.numberFromString(fields[1])?.integerValue
+        totalNumberOfMessagesInThisCycle = numberFormatter.number(from: fields[1])?.intValue
         
-        messageNumber = numberFormatter.numberFromString(fields[2])?.integerValue
+        messageNumber = numberFormatter.number(from: fields[2])?.intValue
         
-        totalNumberOfSVsVisible = numberFormatter.numberFromString(fields[3])?.integerValue
+        totalNumberOfSVsVisible = numberFormatter.number(from: fields[3])?.intValue
         
         var satellites: [GSVSatellite] = []
         
         // First satellite slot
-        if let prnNumber = numberFormatter.numberFromString(fields[4])?.integerValue,
-            elevationDegree = numberFormatter.numberFromString(fields[5])?.integerValue,
-            azimuthDegree = numberFormatter.numberFromString(fields[6])?.integerValue {
+        if let prnNumber = numberFormatter.number(from: fields[4])?.intValue,
+            let elevationDegree = numberFormatter.number(from: fields[5])?.intValue,
+            let azimuthDegree = numberFormatter.number(from: fields[6])?.intValue {
             
-            let signalToNoiseRation = numberFormatter.numberFromString(fields[7])?.integerValue
+            let signalToNoiseRation = numberFormatter.number(from: fields[7])?.intValue
             
             satellites.append(GSVSatellite(prnNumber: prnNumber, elevationDegree: elevationDegree, azimuthDegree: azimuthDegree, signalToNoiseRatio: signalToNoiseRation))
         }
         
         // Second satellite slot
-        if let prnNumber = numberFormatter.numberFromString(fields[8])?.integerValue,
-            elevationDegree = numberFormatter.numberFromString(fields[9])?.integerValue,
-            azimuthDegree = numberFormatter.numberFromString(fields[10])?.integerValue {
+        if let prnNumber = numberFormatter.number(from: fields[8])?.intValue,
+            let elevationDegree = numberFormatter.number(from: fields[9])?.intValue,
+            let azimuthDegree = numberFormatter.number(from: fields[10])?.intValue {
             
-            let signalToNoiseRation = numberFormatter.numberFromString(fields[11])?.integerValue
+            let signalToNoiseRation = numberFormatter.number(from: fields[11])?.intValue
             
             satellites.append(GSVSatellite(prnNumber: prnNumber, elevationDegree: elevationDegree, azimuthDegree: azimuthDegree, signalToNoiseRatio: signalToNoiseRation))
         }
         
         // Third satellite slot
-        if let prnNumber = numberFormatter.numberFromString(fields[12])?.integerValue,
-            elevationDegree = numberFormatter.numberFromString(fields[13])?.integerValue,
-            azimuthDegree = numberFormatter.numberFromString(fields[14])?.integerValue {
+        if let prnNumber = numberFormatter.number(from: fields[12])?.intValue,
+            let elevationDegree = numberFormatter.number(from: fields[13])?.intValue,
+            let azimuthDegree = numberFormatter.number(from: fields[14])?.intValue {
             
-            let signalToNoiseRation = numberFormatter.numberFromString(fields[15])?.integerValue
+            let signalToNoiseRation = numberFormatter.number(from: fields[15])?.intValue
             
             satellites.append(GSVSatellite(prnNumber: prnNumber, elevationDegree: elevationDegree, azimuthDegree: azimuthDegree, signalToNoiseRatio: signalToNoiseRation))
         }
         
         // Fourth satellite slot
-        if let prnNumber = numberFormatter.numberFromString(fields[16])?.integerValue,
-            elevationDegree = numberFormatter.numberFromString(fields[17])?.integerValue,
-            azimuthDegree = numberFormatter.numberFromString(fields[18])?.integerValue {
+        if let prnNumber = numberFormatter.number(from: fields[16])?.intValue,
+            let elevationDegree = numberFormatter.number(from: fields[17])?.intValue,
+            let azimuthDegree = numberFormatter.number(from: fields[18])?.intValue {
             
-            let signalToNoiseRation = numberFormatter.numberFromString(fields[19])?.integerValue
+            let signalToNoiseRation = numberFormatter.number(from: fields[19])?.intValue
             
             satellites.append(GSVSatellite(prnNumber: prnNumber, elevationDegree: elevationDegree, azimuthDegree: azimuthDegree, signalToNoiseRatio: signalToNoiseRation))
         }
@@ -381,7 +381,7 @@ public class GSV: NSObject {
         super.init()
     }
     
-    override public var description: String {
+    override open var description: String {
         var description = ""
         
         if totalNumberOfMessagesInThisCycle != nil {

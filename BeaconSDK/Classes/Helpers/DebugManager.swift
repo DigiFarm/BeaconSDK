@@ -10,7 +10,7 @@ import UIKit
 
 class DebugManager: NSObject {
    
-    class func log(message: String) {
+    class func log(_ message: String) {
         // Core Data
 //        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 //        Event.createWithMessage(message, inContext: appDelegate.managedObjectContext!)

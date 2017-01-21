@@ -11,16 +11,16 @@ import Foundation
 /**
  An instance of the `BeaconReceiver` class receives Beacon data over the local network.
 */
-public class BeaconReceiver: NSObject {
+open class BeaconReceiver: NSObject {
 
-    public var delegate: BeaconReceiverDelegate?
+    open var delegate: BeaconReceiverDelegate?
     
     private let streamer = BeaconServiceStreamer()
     
     /**
      Begin receiving Beacon data and passing it on to the delegate.
     */
-    public func start() {
+    open func start() {
         streamer.delegate = self
         streamer.start()
     }
@@ -28,7 +28,7 @@ public class BeaconReceiver: NSObject {
     /**
      Stop receiving Beacon data.
      */
-    public func stop() {
+    open func stop() {
         streamer.delegate = nil
         streamer.stop()
     }
@@ -45,7 +45,7 @@ public class BeaconReceiver: NSObject {
      - Parameter receiver: The `BeaconReceiver` which originally received the data
      - Parameter parsedString: The `String` data received by the `BeaconReceiver`
     */
-    optional func receiver(receiver: BeaconReceiver, parsedString string: String)
+    @objc optional func receiver(_ receiver: BeaconReceiver, parsedString string: String)
     
     /**
      Receive parsed GGA sentence data from the Beacon device.
@@ -53,7 +53,7 @@ public class BeaconReceiver: NSObject {
      - Parameter receiver: The `BeaconReceiver` which originally received the data
      - Parameter parsedGGA: A `GGA` data structure which represents a NMEA GGA sentence contained in the data received by the `BeaconReceiver`
     */
-    optional func receiver(receiver: BeaconReceiver, parsedGGA gga: GGA)
+    @objc optional func receiver(_ receiver: BeaconReceiver, parsedGGA gga: GGA)
     
     /**
      Receive parsed VTG sentence data from the Beacon device.
@@ -61,7 +61,7 @@ public class BeaconReceiver: NSObject {
      - Parameter receiver: The `BeaconReceiver` which originally received the data
      - Parameter parsedVTG: A `VTG` data structure which represents a NMEA VTG sentence contained in the data received by the `BeaconReceiver`
     */
-    optional func receiver(receiver: BeaconReceiver, parsedVTG vtg: VTG)
+    @objc optional func receiver(_ receiver: BeaconReceiver, parsedVTG vtg: VTG)
     
     /**
      Receive parsed GSV sentence data from the Beacon device.
@@ -69,5 +69,5 @@ public class BeaconReceiver: NSObject {
      - Parameter receiver: The `BeaconReceiver` which originally received the data
      - Parameter parsedGSV: A `GSV` data structure which represents a NMEA GSV sentence contained in the data received by the `BeaconReceiver`
      */
-    optional func receiver(receiver: BeaconReceiver, parsedGSV gsv: GSV)
+    @objc optional func receiver(_ receiver: BeaconReceiver, parsedGSV gsv: GSV)
 }

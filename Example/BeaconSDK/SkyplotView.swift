@@ -12,7 +12,7 @@ class SkyplotMarker {
     let label: String
     let azimuth: Double
     let elevation: Double
-    private var view: SkyplotView.SkyplotMarkerView?
+    fileprivate var view: SkyplotView.SkyplotMarkerView?
     
     init(label: String, azimuth: Double, elevation: Double) {
         self.label = label
@@ -26,19 +26,19 @@ class SkyplotMarker {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIContentSizeCategoryDidChangeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
     }
 
-    @objc func textSizeChanged(notification: NSNotification) {
+    @objc func textSizeChanged(_ notification: Foundation.Notification) {
         setNeedsDisplay()
         setNeedsLayout()
     }
@@ -71,19 +71,19 @@ class SkyplotMarker {
                 } else {
                     // Marker is new. Add the marker.
                     let view = SkyplotMarkerView()
-                    view.frame = CGRect(x: center.x + centerOffset.x - view.intrinsicContentSize().width / 2, y: center.y + centerOffset.y - view.intrinsicContentSize().height / 2, width: view.intrinsicContentSize().width, height: view.intrinsicContentSize().height)
+                    view.frame = CGRect(x: center.x + centerOffset.x - view.intrinsicContentSize.width / 2, y: center.y + centerOffset.y - view.intrinsicContentSize.height / 2, width: view.intrinsicContentSize.width, height: view.intrinsicContentSize.height)
                     view.translatesAutoresizingMaskIntoConstraints = false
-                    view.contentMode = .Redraw
-                    view.opaque = false
+                    view.contentMode = .redraw
+                    view.isOpaque = false
                     view.string = marker.label
                     addSubview(view)
                     view.alpha = 0
                     marker.view = view
 
-                    let centerXConstraint = NSLayoutConstraint(item: view, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: centerOffset.x)
+                    let centerXConstraint = NSLayoutConstraint(item: view, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: centerOffset.x)
                     view.centerXConstraint = centerXConstraint
                     
-                    let centerYConstraint = NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: centerOffset.y)
+                    let centerYConstraint = NSLayoutConstraint(item: view, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: centerOffset.y)
                     view.centerYConstraint = centerYConstraint
                     //
                     addConstraint(centerXConstraint)
@@ -100,7 +100,7 @@ class SkyplotMarker {
                 markersToRemove.append(oldMarker)
             }
             
-            UIView.animateWithDuration(1, animations: { [weak self] in
+            UIView.animate(withDuration: 1, animations: { [weak self] in
                 for marker in markersAdded {
                     marker.view?.alpha = 1
                 }
@@ -108,53 +108,53 @@ class SkyplotMarker {
                 for marker in markersToRemove {
                     marker.view?.alpha = 0
                 }
-            }) { (completed) in
+            }, completion: { (completed) in
                 for marker in markersToRemove {
                     marker.view?.removeFromSuperview()
                 }
-            }
+            }) 
         }
     }
     
-    private var labelFont: UIFont {
+    fileprivate var labelFont: UIFont {
         get {
-            return UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+            return UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
         }
     }
     
-    private var textGutterWidth: CGFloat {
+    fileprivate var textGutterWidth: CGFloat {
         get {
             let letterString = NSAttributedString(string: "W", attributes: [NSFontAttributeName: labelFont])
             return (max(letterString.size().width, letterString.size().height) * 3)
         }
     }
     
-    private var elevation0Diameter: CGFloat {
+    fileprivate var elevation0Diameter: CGFloat {
         get {
             let outerDiameter = min(bounds.size.width, bounds.size.height)
             return outerDiameter - 2 * textGutterWidth
         }
     }
     
-    private var elevation0Radius: CGFloat {
+    fileprivate var elevation0Radius: CGFloat {
         get {
             return elevation0Diameter / 2
         }
     }
     
-    private let lineColor = UIColor.grayColor()
+    fileprivate let lineColor = UIColor.gray
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         lineColor.set()
         
         // Draw minor azimuth lines.
-        func diameterLineForAngle(angle: Double, radius: CGFloat) -> UIBezierPath {
+        func diameterLineForAngle(_ angle: Double, radius: CGFloat) -> UIBezierPath {
             let startPoint = azimuthPointForAngle(angle, radius: radius)
             let endPoint = azimuthPointForAngle(angle + 180, radius: radius)
             
             let path = UIBezierPath()
-            path.moveToPoint(startPoint)
-            path.addLineToPoint(endPoint)
+            path.move(to: startPoint)
+            path.addLine(to: endPoint)
             
             return path
         }
@@ -176,25 +176,25 @@ class SkyplotMarker {
             let elevationDiameter = elevation0Diameter * (CGFloat(elevationLineCount - i)) / CGFloat(elevationLineCount)
             
             // Center the circle in the bounds.
-            let elevationCirclePath = UIBezierPath(ovalInRect: CGRect(x: (bounds.size.width - elevationDiameter) / 2, y: (bounds.size.height - elevationDiameter) / 2, width: elevationDiameter, height: elevationDiameter))
+            let elevationCirclePath = UIBezierPath(ovalIn: CGRect(x: (bounds.size.width - elevationDiameter) / 2, y: (bounds.size.height - elevationDiameter) / 2, width: elevationDiameter, height: elevationDiameter))
             
             // Fade at a rounded rate.
             let degree = 90 * Double(i) / Double(elevationLineCount)
             let radian = degree / 180 * M_PI
             let invertedAlpha = sin(radian)
             
-            lineColor.colorWithAlphaComponent(1 - 0.8 * CGFloat(invertedAlpha)).set()
+            lineColor.withAlphaComponent(1 - 0.8 * CGFloat(invertedAlpha)).set()
             
             elevationCirclePath.lineWidth = 2
             elevationCirclePath.stroke()
         }
         
         // Draw cardinal direction letters.
-        func drawLabel(string: String, atDegree degree: Double) {
+        func drawLabel(_ string: String, atDegree degree: Double) {
             let letterString = NSAttributedString(string: string, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: lineColor])
             let letterCenter = azimuthPointForAngle(degree, radius: elevation0Radius + textGutterWidth / 2)
             let size = letterString.size()
-            letterString.drawAtPoint(CGPoint(x: letterCenter.x - size.width / 2, y: letterCenter.y - size.height / 2))
+            letterString.draw(at: CGPoint(x: letterCenter.x - size.width / 2, y: letterCenter.y - size.height / 2))
         }
         drawLabel("N", atDegree: 0)
         drawLabel("E", atDegree: 90)
@@ -202,7 +202,7 @@ class SkyplotMarker {
         drawLabel("W", atDegree: 270)
     }
     
-    private func azimuthPointForAngle(angle: Double, radius: CGFloat) -> CGPoint {
+    fileprivate func azimuthPointForAngle(_ angle: Double, radius: CGFloat) -> CGPoint {
         let center = CGPoint(x: bounds.size.width / 2, y: bounds.size.height / 2)
         
         let radians = angle / 180 * M_PI
@@ -215,7 +215,7 @@ class SkyplotMarker {
         return CGPoint(x: Double(center.x) + xOffset, y: Double(center.y) + yOffset)
     }
     
-    private func centerOffsetForAzimuth(azimuth: Double, elevation: Double) -> CGPoint {
+    fileprivate func centerOffsetForAzimuth(_ azimuth: Double, elevation: Double) -> CGPoint {
         let limitedElevation = min(90, max(0, elevation))
         let radius = elevation0Radius * (1 - CGFloat(limitedElevation) / 90)
         let point = azimuthPointForAngle(azimuth, radius: radius)
@@ -227,19 +227,19 @@ class SkyplotMarker {
         return offset
     }
     
-    private class SkyplotMarkerView: UIView {
+    fileprivate class SkyplotMarkerView: UIView {
         
-        private var centerXConstraint: NSLayoutConstraint?
-        private var centerYConstraint: NSLayoutConstraint?
-        private var string: String?
+        fileprivate var centerXConstraint: NSLayoutConstraint?
+        fileprivate var centerYConstraint: NSLayoutConstraint?
+        fileprivate var string: String?
         
-        private var markerFont: UIFont {
+        fileprivate var markerFont: UIFont {
             get {
-                return UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+                return UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
             }
         }
         
-        private var markerWidth: CGFloat {
+        fileprivate var markerWidth: CGFloat {
             get {
                 let letterString = NSAttributedString(string: "88", attributes: [NSFontAttributeName: markerFont])
                 return max(letterString.size().width, letterString.size().height) * 1.50
@@ -248,38 +248,38 @@ class SkyplotMarker {
         
         override init(frame: CGRect) {
             super.init(frame: frame)
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
         }
         
         required init?(coder aDecoder: NSCoder) {
             super.init(coder: aDecoder)
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
         }
         
         deinit {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIContentSizeCategoryDidChangeNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
         }
         
-        @objc func textSizeChanged(notification: NSNotification) {
+        @objc func textSizeChanged(_ notification: Foundation.Notification) {
             invalidateIntrinsicContentSize()
             setNeedsDisplay()
             setNeedsLayout()
         }
         
-        override func drawRect(rect: CGRect) {
-            UIBezierPath(ovalInRect: bounds).addClip()
+        override func draw(_ rect: CGRect) {
+            UIBezierPath(ovalIn: bounds).addClip()
             tintColor.set()
             UIBezierPath(rect: bounds).fill()
             
             if let string = string {
-                let attributedString = NSAttributedString(string: string, attributes: [NSFontAttributeName: markerFont, NSForegroundColorAttributeName: UIColor.whiteColor()])
+                let attributedString = NSAttributedString(string: string, attributes: [NSFontAttributeName: markerFont, NSForegroundColorAttributeName: UIColor.white])
                 let stringSize = attributedString.size()
                 let anchorPoint = CGPoint(x: (bounds.size.width - stringSize.width) / 2, y: (bounds.size.height - stringSize.height) / 2)
-                attributedString.drawAtPoint(anchorPoint)
+                attributedString.draw(at: anchorPoint)
             }
         }
         
-        private override func intrinsicContentSize() -> CGSize {
+        fileprivate override var intrinsicContentSize : CGSize {
             return CGSize(width: markerWidth, height: markerWidth)
         }
     }

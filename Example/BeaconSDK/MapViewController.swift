@@ -14,20 +14,20 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    private var ggaObserver: NotificationObserver?
-    private lazy var locationAnnotation: MKPointAnnotation = {
+    fileprivate var ggaObserver: NotificationObserver?
+    fileprivate lazy var locationAnnotation: MKPointAnnotation = {
         let annotation = MKPointAnnotation()
         self.mapView.addAnnotation(annotation)
         return annotation
     }()
-    private var lockOnLocation = true
+    fileprivate var lockOnLocation = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ggaObserver = NotificationObserver(notification: beaconGGANotification, queue: NSOperationQueue.mainQueue()) {
+        ggaObserver = NotificationObserver(notification: beaconGGANotification, queue: OperationQueue.main) {
             [weak self] (gga) in
-            if let latitude = gga.latitude, longitude = gga.longitude {
+            if let latitude = gga.latitude, let longitude = gga.longitude {
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 self?.locationAnnotation.coordinate = coordinate
                 

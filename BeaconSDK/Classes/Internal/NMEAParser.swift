@@ -11,13 +11,12 @@ import CoreLocation
 
 class NMEAParser: NSObject {
     
-    class func parse(input: String) -> ([GGA], [VTG], [GSV], String) {
+    func parseAdditionalInput(_ input: String) -> ([GGA], [VTG], String) {
         
         let (nmeaStrings, remainder) = NMEAParser.extractNMEAStringsFromWorkspace(input)
         
         var ggas: [GGA] = []
         var vtgs: [VTG] = []
-        var gsvs: [GSV] = []
         
         for nmeaString in nmeaStrings {
             if let gga = GGA(nmeaString: nmeaString) {
@@ -27,42 +26,36 @@ class NMEAParser: NSObject {
             if let vtg = VTG(nmeaString: nmeaString) {
                 vtgs.append(vtg)
             }
-            
-            if let gsv = GSV(nmeaString: nmeaString) {
-                gsvs.append(gsv)
-            }
         }
         
-        return (ggas, vtgs, gsvs, remainder)
+        return (ggas, vtgs, remainder)
     }
     
-    private class func extractNMEAStringsFromWorkspace(workspace: String) -> (strings: [String], remainder: String) {
+    private class func extractNMEAStringsFromWorkspace(_ workspace: String) -> (strings: [String], remainder: String) {
         var nmeaStrings: [String] = []
         
-        var nmeaStartIndex: String.Index?
-        var currentIndex = workspace.startIndex
+        var nmeaStartIndex: String.CharacterView.Index?
         
         let workspaceLength = workspace.characters.count
         
         for i in 0..<workspaceLength {
-            if workspace[currentIndex] == "$" { // This index could be the start of a NMEA string.
-                nmeaStartIndex = currentIndex
-            } else if i >= 2 &&
-                workspace[currentIndex.advancedBy(-2)] == "*" &&
-                nmeaStartIndex != nil &&
-                currentIndex.advancedBy(-2) > nmeaStartIndex { // This index is the end of a potential NMEA string.
-                    nmeaStrings.append(workspace.substringWithRange(nmeaStartIndex!...currentIndex))
-                    nmeaStartIndex = nil
-            }
+            let currentIndex = workspace.characters.index(workspace.characters.startIndex, offsetBy: i)
             
-            if i < workspaceLength - 1 {
-                currentIndex = currentIndex.successor()
+            if workspace.characters[currentIndex] == "$" { // This index could be the start of a NMEA string.
+                nmeaStartIndex = currentIndex
+            } else if let nmeaStart = nmeaStartIndex, i >= 2 &&
+                workspace.characters[workspace.characters.index(currentIndex, offsetBy: -2)] == "*" &&
+                workspace.characters.index(currentIndex, offsetBy: -2) > nmeaStart { // This index is the end of a potential NMEA string.
+                let characters = workspace.characters[nmeaStart...currentIndex]
+                let substring: String = String(characters)
+                nmeaStrings.append(substring)
+                nmeaStartIndex = nil
             }
         }
         
         var remainder = ""
-        if nmeaStartIndex != nil {
-            remainder = workspace.substringFromIndex(nmeaStartIndex!)
+        if let nmeaStart = nmeaStartIndex {
+            remainder = String(workspace.characters[nmeaStart..<workspace.characters.endIndex])
         }
         
         // Filter out bad NMEA strings.
@@ -72,24 +65,24 @@ class NMEAParser: NSObject {
         
         return (nmeaStrings, remainder)
     }
-
+    
 }
 
 struct NMEA {
-
-    static func isValidNMEAString(string: String) -> Bool {
+    
+    static func isValidNMEAString(_ string: String) -> Bool {
         if string.characters.count < 4 {
             return false
         }
         
         let dataPortion = dataPortionOfNMEAString(string)
-        let givenChecksum = string.substringFromIndex(string.endIndex.advancedBy(-2))
+        let givenChecksum = string.substring(from: string.characters.index(string.endIndex, offsetBy: -2))
         let checksum = calculateChecksumOfString(dataPortion)
         
         return givenChecksum == checksum
     }
     
-    static func calculateChecksumOfString(string: String) -> String {
+    static func calculateChecksumOfString(_ string: String) -> String {
         
         var check: UInt8 = 0
         for character in string.utf8 {
@@ -101,28 +94,28 @@ struct NMEA {
         return hexString as String
     }
     
-    static func dataPortionOfNMEAString(nmeaString: String) -> String {
+    static func dataPortionOfNMEAString(_ nmeaString: String) -> String {
         if nmeaString.characters.count < 4 {
             return ""
         } else {
-            return nmeaString.substringWithRange(nmeaString.startIndex.advancedBy(1)..<nmeaString.endIndex.advancedBy(-3))
+            return nmeaString.substring(with: nmeaString.characters.index(nmeaString.startIndex, offsetBy: 1)..<nmeaString.characters.index(nmeaString.endIndex, offsetBy: -3))
         }
     }
     
-    static func fieldsFromNMEAString(nmeaString: String) -> [String] {
+    static func fieldsFromNMEAString(_ nmeaString: String) -> [String] {
         let dataPortion = dataPortionOfNMEAString(nmeaString)
-        let fields = dataPortion.characters.split(allowEmptySlices: true) { $0 == "," }.map { String($0) }
+        let fields = dataPortion.characters.split(omittingEmptySubsequences: false) { $0 == "," }.map { String($0) }
         return fields
     }
     
-    static func buildGGAStringWithLocation(location: CLLocation) -> String {
+    static func buildGGAStringWithLocation(_ location: CLLocation) -> String {
         
         let messageId = "GPGGA"
         
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
         dateFormatter.dateFormat = "HHmmss.SS"
-        let timeString = dateFormatter.stringFromDate(location.timestamp)
+        let timeString = dateFormatter.string(from: location.timestamp)
         
         let (latitudeHours, latitudeMinutes) = hoursMinutesFromDegrees(location.coordinate.latitude)
         let (longitudeHours, longitudeMinutes) = hoursMinutesFromDegrees(location.coordinate.longitude)
@@ -161,7 +154,7 @@ struct NMEA {
         return generatedString
     }
     
-    static func hoursMinutesFromDegrees(degrees: Double) -> (Int, Double) {
+    static func hoursMinutesFromDegrees(_ degrees: Double) -> (Int, Double) {
         let absDegrees = abs(degrees)
         let hours = Int(floor(absDegrees))
         let minutes = (absDegrees - Double(hours)) * 60

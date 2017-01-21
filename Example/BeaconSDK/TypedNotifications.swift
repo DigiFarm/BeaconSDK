@@ -13,17 +13,17 @@ struct Notification<A> {
     let name: String
 }
 
-func postNotification<A>(note: Notification<A>, value: A) {
+func postNotification<A>(_ note: Notification<A>, value: A) {
     let userInfo = ["value": Box(value)]
-    NSNotificationCenter.defaultCenter().postNotificationName(note.name, object: nil, userInfo: userInfo)
+    NotificationCenter.default.post(name: Foundation.Notification.Name(rawValue: note.name), object: nil, userInfo: userInfo)
 }
 
 class NotificationObserver {
     let observer: NSObjectProtocol
     
-    init<A>(notification: Notification<A>, queue: NSOperationQueue?, block aBlock: A -> ()) {
-        observer = NSNotificationCenter.defaultCenter().addObserverForName(notification.name, object: nil, queue: queue) { note in
-            if let value = (note.userInfo?["value"] as? Box<A>)?.unbox {
+    init<A>(notification: Notification<A>, queue: OperationQueue?, block aBlock: @escaping (A) -> ()) {
+        observer = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: notification.name), object: nil, queue: queue) { note in
+            if let value = ((note as NSNotification).userInfo?["value"] as? Box<A>)?.unbox {
                 aBlock(value)
             } else {
                 assert(false, "Couldn't understand user info")
@@ -32,7 +32,7 @@ class NotificationObserver {
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(observer)
+        NotificationCenter.default.removeObserver(observer)
     }
     
 }

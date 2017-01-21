@@ -12,12 +12,12 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
 
     var delegate: BeaconServiceStreamerDelegate?
     
-    private var serviceFetcher = BeaconServiceFetcher()
-    private var services: [NSNetService] = []
-    private var socket: GCDAsyncSocket?
-    private var rawStringBuffer = NSData()
-    private var nmeaBuffer = NSData()
-    private let nmeaParser = NMEAParser()
+    fileprivate var serviceFetcher = BeaconServiceFetcher()
+    fileprivate var services: [NetService] = []
+    fileprivate var socket: GCDAsyncSocket?
+    fileprivate var rawStringBuffer = Data()
+    fileprivate var nmeaBuffer = Data()
+    fileprivate let nmeaParser = NMEAParser()
     
     func start() {
         stop()
@@ -43,18 +43,18 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
         socket?.delegate = nil
         socket?.disconnect()
         socket = nil
-        rawStringBuffer = NSData()
-        nmeaBuffer = NSData()
+        rawStringBuffer = Data()
+        nmeaBuffer = Data()
     }
     
-    private func connectToService(service: NSNetService) {
+    fileprivate func connectToService(_ service: NetService) {
         if let addresses = service.addresses {
             for address in addresses {
                 DebugManager.log("Attempting to connect to \(address)")
-                socket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+                socket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
                 
                 do {
-                    try socket?.connectToAddress(address)
+                    try socket?.connect(toAddress: address)
                     break
                 } catch let error as NSError {
                     DebugManager.log("Failed to connect to address(\(address)): \(error)")
@@ -63,23 +63,23 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
         }
     }
     
-    func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
+    func socket(_ sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
         DebugManager.log("Socket connected to host(\(host)) port(\(port))")
-        sock.readDataWithTimeout(-1, tag: -1)
+        sock.readData(withTimeout: -1, tag: -1)
     }
     
-    func socketDidDisconnect(sock: GCDAsyncSocket!, withError err: NSError!) {
+    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: NSError!) {
         DebugManager.log("Socket disconnected: \(err)")
         start()
     }
     
-    func socket(sock: GCDAsyncSocket!, didReadData data: NSData!, withTag tag: Int) {
+    func socket(_ sock: GCDAsyncSocket!, didRead data: Data!, withTag tag: Int) {
         //        DebugManager.log("Socket read data")
         
         let combinedRawStringData = rawStringBuffer.dataByAppendingData(data)
         if let rawString = combinedRawStringData.toString() {
             delegate?.streamer(self, parsedString: rawString)
-            rawStringBuffer = NSData()
+            rawStringBuffer = Data()
         }
         
         let combinedNMEAData = nmeaBuffer.dataByAppendingData(data)
@@ -99,37 +99,37 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
                 delegate?.streamer(self, parsedGSV: gsv)
             }
             
-            nmeaBuffer = remainder.toData() ?? NSData()
+            nmeaBuffer = remainder.toData() ?? Data()
         }
         
-        sock.readDataWithTimeout(-1, tag: -1)
+        sock.readData(withTimeout: -1, tag: -1)
     }
 }
 
 protocol BeaconServiceStreamerDelegate {
     
-    func streamer(streamer: BeaconServiceStreamer, parsedString string: String)
-    func streamer(streamer: BeaconServiceStreamer, parsedGGA gga: GGA)
-    func streamer(streamer: BeaconServiceStreamer, parsedVTG vtg: VTG)
-    func streamer(streamer: BeaconServiceStreamer, parsedGSV gsv: GSV)
+    func streamer(_ streamer: BeaconServiceStreamer, parsedString string: String)
+    func streamer(_ streamer: BeaconServiceStreamer, parsedGGA gga: GGA)
+    func streamer(_ streamer: BeaconServiceStreamer, parsedVTG vtg: VTG)
+    func streamer(_ streamer: BeaconServiceStreamer, parsedGSV gsv: GSV)
     
 }
 
 extension BeaconReceiver: BeaconServiceStreamerDelegate
 {
-    func streamer(streamer: BeaconServiceStreamer, parsedString string: String) {
+    func streamer(_ streamer: BeaconServiceStreamer, parsedString string: String) {
         delegate?.receiver?(self, parsedString: string)
     }
     
-    func streamer(streamer: BeaconServiceStreamer, parsedGGA gga: GGA) {
+    func streamer(_ streamer: BeaconServiceStreamer, parsedGGA gga: GGA) {
         delegate?.receiver?(self, parsedGGA: gga)
     }
     
-    func streamer(streamer: BeaconServiceStreamer, parsedVTG vtg: VTG) {
+    func streamer(_ streamer: BeaconServiceStreamer, parsedVTG vtg: VTG) {
         delegate?.receiver?(self, parsedVTG: vtg)
     }
     
-    func streamer(streamer: BeaconServiceStreamer, parsedGSV gsv: GSV) {
+    func streamer(_ streamer: BeaconServiceStreamer, parsedGSV gsv: GSV) {
         delegate?.receiver?(self, parsedGSV: gsv)
     }
 }

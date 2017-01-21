@@ -10,81 +10,89 @@ import Foundation
 
 let MB = 1048576
 
-extension NSStream {
+extension Stream {
     var statusString: String {
         get {
             switch streamStatus {
-            case .NotOpen:
+            case .notOpen:
                 return "Not Open"
-            case .Opening:
+            case .opening:
                 return "Opening"
-            case .Open:
+            case .open:
                 return "Open"
-            case .Reading:
+            case .reading:
                 return "Reading"
-            case .Writing:
+            case .writing:
                 return "Writing"
-            case .AtEnd:
+            case .atEnd:
                 return "At End"
-            case .Closed:
+            case .closed:
                 return "Closed"
-            case .Error:
+            case .error:
                 return "Error"
             }
         }
     }
 }
 
-extension NSData {
+extension Data {
     func hexString() -> NSString {
         let str = NSMutableString()
-        let bytes = UnsafeBufferPointer<UInt8>(start: UnsafePointer(self.bytes), count:self.length)
-        for byte in bytes {
-            str.appendFormat("%02hhx", byte)
+        
+        var iterater = makeIterator()
+        var byte = iterater.next()
+        while byte != nil {
+            str.appendFormat("%02hhx", byte!)
+            byte = iterater.next()
         }
+        
         return str
     }
     
-    func dataByAppendingData(data: NSData, fifoLimit: Int = 0) -> NSData {
-        let combinedBuffer = NSMutableData(data: self)
-        combinedBuffer.appendData(data)
+    func dataByAppendingData(_ data: Data, fifoLimit: Int = 0) -> Data {
+        var combinedBuffer = self
+        combinedBuffer.append(data)
         
-        if fifoLimit > 0 && combinedBuffer.length > fifoLimit {
-            
+        if fifoLimit > 0 && combinedBuffer.count > fifoLimit {
             DebugManager.log("Error: Buffer Overflow")
-            
-            return combinedBuffer.subdataWithRange(NSMakeRange(combinedBuffer.length - fifoLimit, fifoLimit))
+            // Return only the fifoLimit number of bytes from the end of the data.
+            return combinedBuffer.subdata(in: combinedBuffer.index(combinedBuffer.endIndex, offsetBy: -fifoLimit)..<combinedBuffer.endIndex)
         }
         
-        return NSData(data: combinedBuffer)
+        return combinedBuffer
     }
     
-    func dataByAppendingBytes(bytes: UnsafePointer<Void>, length: Int, fifoLimit: Int = 0) -> NSData {
-        let combinedBuffer = NSMutableData(data: self)
-        combinedBuffer.appendBytes(bytes, length: length)
+    func dataByAppendingBytes(_ bytes: UnsafePointer<UInt8>, length: Int, fifoLimit: Int = 0) -> Data {
+        var combinedBuffer = self
+        combinedBuffer.append(bytes, count: length)
         
-        if fifoLimit > 0 && combinedBuffer.length > fifoLimit {
-            return combinedBuffer.subdataWithRange(NSMakeRange(combinedBuffer.length - fifoLimit, fifoLimit))
+        if fifoLimit > 0 && combinedBuffer.count > fifoLimit {
+            DebugManager.log("Error: Buffer Overflow")
+            // Return only the fifoLimit number of bytes from the end of the data.
+            return combinedBuffer.subdata(in: combinedBuffer.index(combinedBuffer.endIndex, offsetBy: -fifoLimit)..<combinedBuffer.endIndex)
         }
         
-        return NSData(data: combinedBuffer)
+        return combinedBuffer
     }
     
-    func componentsSeparatedByData(data: NSData) -> [NSData] {
-
-        var components = [NSData]()
-    
-        var searchRangeLocation = 0
+    // Splits the data using the given separator data.
+    // An empty preceeding data IS included if the delimiter appears at the beginning of this data.
+    // An empty trailing data is NOT included if the delimiter appears at the end of this data.
+    // If the separator does not appear anywhere, the original data is returned as a single component.
+    func componentsSeparatedByData(_ data: Data) -> [Data] {
         
-        while searchRangeLocation < length {
-            let searchRange = NSMakeRange(searchRangeLocation, length - searchRangeLocation)
-            let separatorRange = rangeOfData(data, options: [], range: searchRange)
-            if separatorRange.location != NSNotFound {
-                let componentRange = NSMakeRange(searchRangeLocation, separatorRange.location - searchRangeLocation)
-                components.append(subdataWithRange(componentRange))
-                searchRangeLocation = separatorRange.location + separatorRange.length
+        var components = [Data]()
+        
+        var searchRangeLocation = startIndex
+        
+        while searchRangeLocation < endIndex {
+            let searchRange = Range(searchRangeLocation..<endIndex)
+            if let separatorRange = range(of: data, options: [], in: searchRange) {
+                let componentRange = Range(searchRange.lowerBound..<separatorRange.lowerBound)
+                components.append(subdata(in: componentRange))
+                searchRangeLocation = separatorRange.upperBound
             } else {
-                components.append(subdataWithRange(searchRange))
+                components.append(subdata(in: searchRange))
                 break
             }
         }
@@ -92,52 +100,57 @@ extension NSData {
         return components
     }
     
-    func endsWithData(data: NSData) -> Bool {
-        if data.length > length {
+    func endsWithData(_ data: Data) -> Bool {
+        if data.count > count {
             return false
         }
         
-        let range = rangeOfData(data, options: [], range: NSMakeRange(length - data.length, data.length))
-        return range.location != NSNotFound
+        let searchRange = Range(index(endIndex, offsetBy: -data.count)..<endIndex)
+        
+        if range(of: data, options: [], in: searchRange) != nil {
+            return true
+        } else {
+            return false
+        }
     }
     
-    func endsWithHex(hex: String) -> Bool {
+    func endsWithHex(_ hex: String) -> Bool {
         return endsWithData(hex.dataFromHexString()!)
     }
     
     func toString() -> String? {
-        return NSString(data: self, encoding: NSUTF8StringEncoding) as? String
+        return String(data: self, encoding: .utf8)
     }
 }
 
 extension String {
-    func toData() -> NSData? {
-        return dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+    func toData() -> Data? {
+        return data(using: .utf8, allowLossyConversion: false)
     }
     
-    func dataFromHexString() -> NSData? {
-
+    func dataFromHexString() -> Data? {
+        
         let data = NSMutableData()
         
-        var currentIndex = self.startIndex
-        while currentIndex < self.endIndex.advancedBy(-1) {
-            let substring = self.substringWithRange(currentIndex..<currentIndex.advancedBy(2))
+        var currentIndex = characters.startIndex
+        while currentIndex < characters.index(characters.endIndex, offsetBy: -1) {
+            let substring = String(characters[currentIndex..<characters.index(currentIndex, offsetBy: 2)])
             
-            let scanner = NSScanner(string: substring)
+            let scanner = Scanner(string: substring)
             
             var result: UInt32 = 0
-            let success = scanner.scanHexInt(&result)
+            let success = scanner.scanHexInt32(&result)
             if success {
                 let byteResult: UInt8 = UInt8(result)
-                data.appendBytes([byteResult], length: 1)
+                data.append([byteResult], length: 1)
             } else {
                 DebugManager.log("String could not be parsed as hex: \(self)")
                 return nil
             }
             
-            currentIndex = currentIndex.advancedBy(2)
+            currentIndex = characters.index(currentIndex, offsetBy: 2)
         }
         
-        return data
+        return data as Data
     }
 }

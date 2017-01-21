@@ -24,23 +24,23 @@ class NMEAViewController: UITableViewController {
     @IBOutlet weak var magneticTrackMadeGoodLabel: UILabel!
     @IBOutlet weak var speedOverGroundLabel: UILabel!
     
-    private var ggaObserver: NotificationObserver?
-    private var vtgObserver: NotificationObserver?
+    fileprivate var ggaObserver: NotificationObserver?
+    fileprivate var vtgObserver: NotificationObserver?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ggaObserver = NotificationObserver(notification: beaconGGANotification, queue: NSOperationQueue.mainQueue()){ [unowned self] (gga) in
+        ggaObserver = NotificationObserver(notification: beaconGGANotification, queue: OperationQueue.main){ [unowned self] (gga) in
             // Update gga labels
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateStyle = .NoStyle
-            dateFormatter.timeStyle = .LongStyle
-            dateFormatter.timeZone = NSTimeZone(name: "UTC")
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .none
+            dateFormatter.timeStyle = .long
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")
             
-            let correctionAgeFormatter = NSNumberFormatter()
-            correctionAgeFormatter.roundingMode = NSNumberFormatterRoundingMode.RoundHalfEven
+            let correctionAgeFormatter = NumberFormatter()
+            correctionAgeFormatter.roundingMode = NumberFormatter.RoundingMode.halfEven
             
-            self.timestampLabel.text = gga.utcTime != nil ? dateFormatter.stringFromDate((gga.utcTime)!) : ""
+            self.timestampLabel.text = gga.utcTime != nil ? dateFormatter.string(from: (gga.utcTime)!) : ""
             
             self.latitudeLabel.text = gga.latitude != nil ? String(format: "%.7f", (gga.latitude)!) : ""
             self.longitudeLabel.text = gga.longitude != nil ? String(format: "%.7f", (gga.longitude)!) : ""
@@ -55,7 +55,7 @@ class NMEAViewController: UITableViewController {
             
             self.geoidSeparationLabel.text = gga.geoidSeparation != nil ? "\((gga.geoidSeparation)!) M" : ""
             
-            if let age = gga.ageOfDifferentialGPSDataRecord, correctionAgeString = correctionAgeFormatter.stringFromNumber(age) {
+            if let age = gga.ageOfDifferentialGPSDataRecord, let correctionAgeString = correctionAgeFormatter.string(from: age) {
                 self.ageOfDGPSDataRecordLabel?.text = "\(correctionAgeString)s"
             } else {
                 self.ageOfDGPSDataRecordLabel?.text = ""
@@ -64,7 +64,7 @@ class NMEAViewController: UITableViewController {
             self.stationIDLabel.text = gga.referenceStationId != nil ? "\((gga.referenceStationId)!)" : ""
         }
         
-        vtgObserver = NotificationObserver(notification: beaconVTGNotification, queue: NSOperationQueue.mainQueue()) { [unowned self] (vtg) in
+        vtgObserver = NotificationObserver(notification: beaconVTGNotification, queue: OperationQueue.main) { [unowned self] (vtg) in
             //Update vtg labels
             self.trueTrackMadeGoodLabel.text = vtg.trueTrackMadeGoodDegrees != nil ? "\(vtg.trueTrackMadeGoodDegrees!)°" : ""
             

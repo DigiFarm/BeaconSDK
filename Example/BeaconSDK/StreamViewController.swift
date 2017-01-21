@@ -10,24 +10,24 @@ import UIKit
 
 class StreamViewController: UIViewController {
 
-    private var beaconStringObserver: NotificationObserver?
-    private let maxTextViewCharacterCount = 3000
+    fileprivate var beaconStringObserver: NotificationObserver?
+    fileprivate let maxTextViewCharacterCount = 3000
     @IBOutlet weak var textView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        beaconStringObserver = NotificationObserver(notification: beaconStringNotification, queue: NSOperationQueue.mainQueue()) {
+        beaconStringObserver = NotificationObserver(notification: beaconStringNotification, queue: OperationQueue.main) {
             [weak self] (string) in
             self?.displayString(string)
         }
     }
 
-    private func displayString(string: String) {
+    fileprivate func displayString(_ string: String) {
         let text = textView.text ?? ""
         textView.text = "\(text)\(string)"
         if textView.text.characters.count > maxTextViewCharacterCount {
-            textView.text = textView.text.substringFromIndex(textView.text.characters.endIndex.advancedBy(-maxTextViewCharacterCount))
+            textView.text = textView.text.substring(from: textView.text.characters.index(textView.text.characters.endIndex, offsetBy: -maxTextViewCharacterCount))
         }
         
         textView.scrollRangeToVisible(NSMakeRange(textView.text.characters.count - 1, 1))
