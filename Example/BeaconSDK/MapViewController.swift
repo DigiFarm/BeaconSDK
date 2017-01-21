@@ -14,13 +14,13 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    fileprivate var ggaObserver: NotificationObserver?
-    fileprivate lazy var locationAnnotation: MKPointAnnotation = {
+    private var ggaObserver: NotificationObserver?
+    private lazy var locationAnnotation: MKPointAnnotation = {
         let annotation = MKPointAnnotation()
         self.mapView.addAnnotation(annotation)
         return annotation
     }()
-    fileprivate var lockOnLocation = true
+    private var lockOnLocation = true
     
     override func viewDidLoad() {
         super.viewDidLoad()

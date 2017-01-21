@@ -24,8 +24,8 @@ class NMEAViewController: UITableViewController {
     @IBOutlet weak var magneticTrackMadeGoodLabel: UILabel!
     @IBOutlet weak var speedOverGroundLabel: UILabel!
     
-    fileprivate var ggaObserver: NotificationObserver?
-    fileprivate var vtgObserver: NotificationObserver?
+    private var ggaObserver: NotificationObserver?
+    private var vtgObserver: NotificationObserver?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +55,7 @@ class NMEAViewController: UITableViewController {
             
             self.geoidSeparationLabel.text = gga.geoidSeparation != nil ? "\((gga.geoidSeparation)!) M" : ""
             
-            if let age = gga.ageOfDifferentialGPSDataRecord, let correctionAgeString = correctionAgeFormatter.string(from: age) {
+            if let age = gga.ageOfDifferentialGPSDataRecord, let correctionAgeString = correctionAgeFormatter.string(from: NSNumber(value: age)) {
                 self.ageOfDGPSDataRecordLabel?.text = "\(correctionAgeString)s"
             } else {
                 self.ageOfDGPSDataRecordLabel?.text = ""

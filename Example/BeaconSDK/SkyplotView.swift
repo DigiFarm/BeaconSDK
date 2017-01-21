@@ -116,33 +116,33 @@ class SkyplotMarker {
         }
     }
     
-    fileprivate var labelFont: UIFont {
+    private var labelFont: UIFont {
         get {
             return UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
         }
     }
     
-    fileprivate var textGutterWidth: CGFloat {
+    private var textGutterWidth: CGFloat {
         get {
             let letterString = NSAttributedString(string: "W", attributes: [NSFontAttributeName: labelFont])
             return (max(letterString.size().width, letterString.size().height) * 3)
         }
     }
     
-    fileprivate var elevation0Diameter: CGFloat {
+    private var elevation0Diameter: CGFloat {
         get {
             let outerDiameter = min(bounds.size.width, bounds.size.height)
             return outerDiameter - 2 * textGutterWidth
         }
     }
     
-    fileprivate var elevation0Radius: CGFloat {
+    private var elevation0Radius: CGFloat {
         get {
             return elevation0Diameter / 2
         }
     }
     
-    fileprivate let lineColor = UIColor.gray
+    private let lineColor = UIColor.gray
     
     override func draw(_ rect: CGRect) {
         lineColor.set()
@@ -202,7 +202,7 @@ class SkyplotMarker {
         drawLabel("W", atDegree: 270)
     }
     
-    fileprivate func azimuthPointForAngle(_ angle: Double, radius: CGFloat) -> CGPoint {
+    private func azimuthPointForAngle(_ angle: Double, radius: CGFloat) -> CGPoint {
         let center = CGPoint(x: bounds.size.width / 2, y: bounds.size.height / 2)
         
         let radians = angle / 180 * M_PI
@@ -215,7 +215,7 @@ class SkyplotMarker {
         return CGPoint(x: Double(center.x) + xOffset, y: Double(center.y) + yOffset)
     }
     
-    fileprivate func centerOffsetForAzimuth(_ azimuth: Double, elevation: Double) -> CGPoint {
+    private func centerOffsetForAzimuth(_ azimuth: Double, elevation: Double) -> CGPoint {
         let limitedElevation = min(90, max(0, elevation))
         let radius = elevation0Radius * (1 - CGFloat(limitedElevation) / 90)
         let point = azimuthPointForAngle(azimuth, radius: radius)
@@ -233,13 +233,13 @@ class SkyplotMarker {
         fileprivate var centerYConstraint: NSLayoutConstraint?
         fileprivate var string: String?
         
-        fileprivate var markerFont: UIFont {
+        private var markerFont: UIFont {
             get {
                 return UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
             }
         }
         
-        fileprivate var markerWidth: CGFloat {
+        private var markerWidth: CGFloat {
             get {
                 let letterString = NSAttributedString(string: "88", attributes: [NSFontAttributeName: markerFont])
                 return max(letterString.size().width, letterString.size().height) * 1.50

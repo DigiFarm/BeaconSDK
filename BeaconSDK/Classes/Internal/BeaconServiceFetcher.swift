@@ -8,16 +8,16 @@
 
 import Foundation
 
-class BeaconServiceFetcher: NSObject {
+class BeaconServiceFetcher: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
 
-    fileprivate let serviceType = "_beacon._tcp."
+    private let serviceType = "_beacon._tcp."
     
-    fileprivate var domainBrowser: NetServiceBrowser?
-    fileprivate var serviceBrowsers: [(String, NetServiceBrowser)] = []
-    fileprivate var unresolvedServices: [NetService] = []
-    fileprivate var resolvedServices: [NetService] = []
+    private var domainBrowser: NetServiceBrowser?
+    private var serviceBrowsers: [(String, NetServiceBrowser)] = []
+    private var unresolvedServices: [NetService] = []
+    private var resolvedServices: [NetService] = []
     
-    fileprivate var completion: ((NetService) -> Void)?
+    private var completion: ((NetService) -> Void)?
     
     func fetchBeaconServicesWithCompletion(_ completion: @escaping (NetService) -> Void) {
         reset()
@@ -43,15 +43,14 @@ class BeaconServiceFetcher: NSObject {
         resolvedServices.removeAll()
     }
     
-    fileprivate func retry() {
+    private func retry() {
         if let completion = completion {
             fetchBeaconServicesWithCompletion(completion)
         }
     }
-}
-
-// MARK: - NSNetServiceBrowserDelegate
-extension BeaconServiceFetcher: NetServiceBrowserDelegate {
+    
+    // MARK: - NetServiceBrowserDelegate
+    
     func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
         DebugManager.log("Domain browser found domain(\(domainString))")
         let existingBrowersForThisDomain = serviceBrowsers.filter { $0.0 == domainString }
@@ -94,10 +93,8 @@ extension BeaconServiceFetcher: NetServiceBrowserDelegate {
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
         DebugManager.log("Service browser stopped searching.")
     }
-}
-
-// MARK: - NSNetServiceDelegate
-extension BeaconServiceFetcher: NetServiceDelegate {
+    
+    // MARK: - NetServiceDelegate
     
     func netServiceDidResolveAddress(_ sender: NetService) {
         DebugManager.log("Resolved address for domain(\(sender.domain)) type(\(sender.type)) name(\(sender.name)) addresses(\(sender.addresses ?? []))")
@@ -112,5 +109,4 @@ extension BeaconServiceFetcher: NetServiceDelegate {
     func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
         DebugManager.log("Service did not resolve: \(errorDict)")
     }
-    
 }

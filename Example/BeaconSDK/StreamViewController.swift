@@ -10,8 +10,8 @@ import UIKit
 
 class StreamViewController: UIViewController {
 
-    fileprivate var beaconStringObserver: NotificationObserver?
-    fileprivate let maxTextViewCharacterCount = 3000
+    private var beaconStringObserver: NotificationObserver?
+    private let maxTextViewCharacterCount = 3000
     @IBOutlet weak var textView: UITextView!
     
     override func viewDidLoad() {
@@ -23,7 +23,7 @@ class StreamViewController: UIViewController {
         }
     }
 
-    fileprivate func displayString(_ string: String) {
+    private func displayString(_ string: String) {
         let text = textView.text ?? ""
         textView.text = "\(text)\(string)"
         if textView.text.characters.count > maxTextViewCharacterCount {

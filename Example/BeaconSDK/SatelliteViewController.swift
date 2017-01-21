@@ -11,12 +11,12 @@ import BeaconSDK
 
 class SatelliteViewController: UIViewController {
 
-    fileprivate var gsvObserver: NotificationObserver?
+    private var gsvObserver: NotificationObserver?
 
     @IBOutlet weak var skyplotView: SkyplotView!
     
-    fileprivate var temporarySatellites = [GSVSatellite]()
-    fileprivate var satellites = [GSVSatellite]() {
+    private var temporarySatellites = [GSVSatellite]()
+    private var satellites = [GSVSatellite]() {
         didSet {
             let markers = satellites.map{ SkyplotMarker(label: "\($0.prnNumber)", azimuth: Double($0.azimuthDegree), elevation: Double($0.elevationDegree)) }
             skyplotView.markers = markers

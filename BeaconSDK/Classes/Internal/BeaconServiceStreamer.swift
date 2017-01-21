@@ -12,12 +12,12 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
 
     var delegate: BeaconServiceStreamerDelegate?
     
-    fileprivate var serviceFetcher = BeaconServiceFetcher()
-    fileprivate var services: [NetService] = []
-    fileprivate var socket: GCDAsyncSocket?
-    fileprivate var rawStringBuffer = Data()
-    fileprivate var nmeaBuffer = Data()
-    fileprivate let nmeaParser = NMEAParser()
+    private var serviceFetcher = BeaconServiceFetcher()
+    private var services: [NetService] = []
+    private var socket: GCDAsyncSocket?
+    private var rawStringBuffer = Data()
+    private var nmeaBuffer = Data()
+    private let nmeaParser = NMEAParser()
     
     func start() {
         stop()
@@ -47,7 +47,7 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
         nmeaBuffer = Data()
     }
     
-    fileprivate func connectToService(_ service: NetService) {
+    private func connectToService(_ service: NetService) {
         if let addresses = service.addresses {
             for address in addresses {
                 DebugManager.log("Attempting to connect to \(address)")

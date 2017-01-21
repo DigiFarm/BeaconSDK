@@ -11,12 +11,13 @@ import CoreLocation
 
 class NMEAParser: NSObject {
     
-    func parseAdditionalInput(_ input: String) -> ([GGA], [VTG], String) {
+    class func parse(_ input: String) -> ([GGA], [VTG], [GSV], String) {
         
         let (nmeaStrings, remainder) = NMEAParser.extractNMEAStringsFromWorkspace(input)
         
         var ggas: [GGA] = []
         var vtgs: [VTG] = []
+        var gsvs: [GSV] = []
         
         for nmeaString in nmeaStrings {
             if let gga = GGA(nmeaString: nmeaString) {
@@ -26,9 +27,13 @@ class NMEAParser: NSObject {
             if let vtg = VTG(nmeaString: nmeaString) {
                 vtgs.append(vtg)
             }
+            
+            if let gsv = GSV(nmeaString: nmeaString) {
+                gsvs.append(gsv)
+            }
         }
         
-        return (ggas, vtgs, remainder)
+        return (ggas, vtgs, gsvs, remainder)
     }
     
     private class func extractNMEAStringsFromWorkspace(_ workspace: String) -> (strings: [String], remainder: String) {
