@@ -68,7 +68,7 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
         sock.readData(withTimeout: -1, tag: -1)
     }
     
-    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: NSError!) {
+    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: Error!) {
         DebugManager.log("Socket disconnected: \(err)")
         start()
     }
