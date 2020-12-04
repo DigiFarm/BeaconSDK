@@ -47,21 +47,21 @@
 
 /* Begin PBXFileReference section */
 		098F643DE60021F6D00B8472E2BE3AD5 /* BeaconSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = BeaconSDK.release.xcconfig; sourceTree = "<group>"; };
-		0AAD557679353F46583B98A0D2DA7211 /* Pods_BeaconSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BeaconSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AAD557679353F46583B98A0D2DA7211 /* Pods_BeaconSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_BeaconSDK_Example.framework; path = "Pods-BeaconSDK_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		246559D13ADF2CEA163143E4987A8C48 /* Pods-BeaconSDK_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BeaconSDK_Tests-Info.plist"; sourceTree = "<group>"; };
 		257FC8C953787D35DBC2BCB7CC89929B /* StreamUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StreamUtils.swift; sourceTree = "<group>"; };
 		2BD9504DC8EEC9259D91066CF5FEE433 /* Pods-BeaconSDK_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-BeaconSDK_Tests-umbrella.h"; sourceTree = "<group>"; };
 		312CF5EB36C66C481980ABFB6A42C0D2 /* Pods-BeaconSDK_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BeaconSDK_Tests-dummy.m"; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		330A42C81D924E9C92B15FD9A108B4DF /* BeaconSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BeaconSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		330A42C81D924E9C92B15FD9A108B4DF /* BeaconSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = BeaconSDK.framework; path = BeaconSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AAFE5209B8FC1E192150B1A6EF7ADA3 /* PublicTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PublicTypes.swift; path = BeaconSDK/Classes/PublicTypes.swift; sourceTree = "<group>"; };
 		3BF75B2BA4528A25477CD7BBB7C9B753 /* Pods-BeaconSDK_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-BeaconSDK_Tests.modulemap"; sourceTree = "<group>"; };
 		41FB31B4D530A2E10FF254DD58C1F616 /* Pods-BeaconSDK_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BeaconSDK_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		430D29FF47954573656733E10EEA2477 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		430D29FF47954573656733E10EEA2477 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		4330DD5876D7C5DD017619F8D70084AB /* Pods-BeaconSDK_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BeaconSDK_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		46F3A3D370EBF49D8886081D763603C8 /* BeaconSDK-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "BeaconSDK-Info.plist"; sourceTree = "<group>"; };
 		4BE51E41111919B9EA712C1F20657419 /* Pods-BeaconSDK_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BeaconSDK_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		4D47994492FD1CE6FCE79C830ABEC81A /* BeaconSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = BeaconSDK.podspec; sourceTree = "<group>"; tabWidth = 2; };
+		4D47994492FD1CE6FCE79C830ABEC81A /* BeaconSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = BeaconSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4E472FC92520534E64E4D224909CB73D /* DebugManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DebugManager.swift; sourceTree = "<group>"; };
 		54B2ABCF4D028C073BF16BE709780634 /* BeaconReceiver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BeaconReceiver.swift; path = BeaconSDK/Classes/BeaconReceiver.swift; sourceTree = "<group>"; };
 		6DDEF211CDFDD6D84B68136B361E23F2 /* BeaconSDK-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "BeaconSDK-prefix.pch"; sourceTree = "<group>"; };
@@ -73,15 +73,15 @@
 		8BB38EB338177360C6905767598E86AB /* BeaconSDK-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "BeaconSDK-umbrella.h"; sourceTree = "<group>"; };
 		9B984ED12134D6F5EFE674FE1F4249F4 /* Pods-BeaconSDK_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BeaconSDK_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		9CC63E9003E72F2FD0719EE135C72F9B /* BeaconSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = BeaconSDK.debug.xcconfig; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A2889BFA27CD0BC5D8CA005AAC7FC188 /* Pods-BeaconSDK_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-BeaconSDK_Example-frameworks.sh"; sourceTree = "<group>"; };
 		A71410FA2C24E4D3AA0747E1FCE9637A /* GCDAsyncSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		AA29F6D4A165BC5343DDB1B168FE4D82 /* Pods-BeaconSDK_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-BeaconSDK_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		B12870CE5662F37244A9216AD9566F33 /* Pods-BeaconSDK_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-BeaconSDK_Example-dummy.m"; sourceTree = "<group>"; };
 		B298276996E2F8EF09A6D0D89B9D9CC7 /* Pods-BeaconSDK_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-BeaconSDK_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		B330226A31B83E977B23FBDD2DEDBA2A /* BeaconSDK.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = BeaconSDK.modulemap; sourceTree = "<group>"; };
-		CD950D25A75C69F6D8142821F63FAF7D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		D188E147E5BD03B58BB0E55EFB77B6AB /* Pods_BeaconSDK_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BeaconSDK_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD950D25A75C69F6D8142821F63FAF7D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		D188E147E5BD03B58BB0E55EFB77B6AB /* Pods_BeaconSDK_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_BeaconSDK_Tests.framework; path = "Pods-BeaconSDK_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D36C971BE536730B691C5D4CE78A7B16 /* Pods-BeaconSDK_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-BeaconSDK_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D7C76E111B2B56481341FD261A388B4E /* GCDAsyncSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		DDF8F166E036906DFC704ADFC0091BB5 /* BeaconServiceStreamer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BeaconServiceStreamer.swift; sourceTree = "<group>"; };
@@ -363,7 +363,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1100;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -584,7 +584,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -612,7 +611,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -644,7 +644,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
