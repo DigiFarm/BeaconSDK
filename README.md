@@ -9,7 +9,7 @@ The DigiFarm NTRIP Client app is used to deliver RTK corrections data to the GRT
 
 ## Requirements
 
-* iOS 8+
+* iOS 9+
 
 ## How to Receive NMEA data using the Beacon SDK
 
