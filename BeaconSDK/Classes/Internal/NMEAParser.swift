@@ -39,19 +39,19 @@ class NMEAParser: NSObject {
     private class func extractNMEAStringsFromWorkspace(_ workspace: String) -> (strings: [String], remainder: String) {
         var nmeaStrings: [String] = []
         
-        var nmeaStartIndex: String.CharacterView.Index?
+        var nmeaStartIndex: String.Index?
         
-        let workspaceLength = workspace.characters.count
+        let workspaceLength = workspace.count
         
         for i in 0..<workspaceLength {
-            let currentIndex = workspace.characters.index(workspace.characters.startIndex, offsetBy: i)
+            let currentIndex = workspace.index(workspace.startIndex, offsetBy: i)
             
-            if workspace.characters[currentIndex] == "$" { // This index could be the start of a NMEA string.
+            if workspace[currentIndex] == "$" { // This index could be the start of a NMEA string.
                 nmeaStartIndex = currentIndex
             } else if let nmeaStart = nmeaStartIndex, i >= 2 &&
-                workspace.characters[workspace.characters.index(currentIndex, offsetBy: -2)] == "*" &&
-                workspace.characters.index(currentIndex, offsetBy: -2) > nmeaStart { // This index is the end of a potential NMEA string.
-                let characters = workspace.characters[nmeaStart...currentIndex]
+                workspace[workspace.index(currentIndex, offsetBy: -2)] == "*" &&
+                workspace.index(currentIndex, offsetBy: -2) > nmeaStart { // This index is the end of a potential NMEA string.
+                let characters = workspace[nmeaStart...currentIndex]
                 let substring: String = String(characters)
                 nmeaStrings.append(substring)
                 nmeaStartIndex = nil
@@ -60,7 +60,7 @@ class NMEAParser: NSObject {
         
         var remainder = ""
         if let nmeaStart = nmeaStartIndex {
-            remainder = String(workspace.characters[nmeaStart..<workspace.characters.endIndex])
+            remainder = String(workspace[nmeaStart..<workspace.endIndex])
         }
         
         // Filter out bad NMEA strings.
@@ -76,40 +76,47 @@ class NMEAParser: NSObject {
 struct NMEA {
     
     static func isValidNMEAString(_ string: String) -> Bool {
-        if string.characters.count < 4 {
+        if string.count < 4 {
             return false
         }
         
         let dataPortion = dataPortionOfNMEAString(string)
-        let givenChecksum = string.substring(from: string.characters.index(string.endIndex, offsetBy: -2))
+        let givenChecksum = string.suffix(2)
         let checksum = calculateChecksumOfString(dataPortion)
         
         return givenChecksum == checksum
     }
     
     static func calculateChecksumOfString(_ string: String) -> String {
-        
+        if let data = string.data(using: .utf8) {
+            return calculateChecksumOfData(data)
+        } else {
+            return ""
+        }
+    }
+    
+    static func calculateChecksumOfData(_ data: Data) -> String {
         var check: UInt8 = 0
-        for character in string.utf8 {
-            check ^= character
+        for byte in data {
+            check ^= byte
         }
         
-        let hexString = NSString(format: "%02X", check)
+        let hexString = String(format: "%02X", check)
         
-        return hexString as String
+        return hexString
     }
     
     static func dataPortionOfNMEAString(_ nmeaString: String) -> String {
-        if nmeaString.characters.count < 4 {
+        if nmeaString.count < 4 {
             return ""
         } else {
-            return nmeaString.substring(with: nmeaString.characters.index(nmeaString.startIndex, offsetBy: 1)..<nmeaString.characters.index(nmeaString.endIndex, offsetBy: -3))
+            return String(nmeaString[nmeaString.index(nmeaString.startIndex, offsetBy: 1)..<nmeaString.index(nmeaString.endIndex, offsetBy: -3)])
         }
     }
     
     static func fieldsFromNMEAString(_ nmeaString: String) -> [String] {
         let dataPortion = dataPortionOfNMEAString(nmeaString)
-        let fields = dataPortion.characters.split(omittingEmptySubsequences: false) { $0 == "," }.map { String($0) }
+        let fields = dataPortion.split(omittingEmptySubsequences: false) { $0 == "," }.map { String($0) }
         return fields
     }
     

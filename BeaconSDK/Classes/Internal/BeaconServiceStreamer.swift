@@ -63,17 +63,21 @@ class BeaconServiceStreamer: NSObject, GCDAsyncSocketDelegate {
         }
     }
     
-    func socket(_ sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
+    func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         DebugManager.log("Socket connected to host(\(host)) port(\(port))")
         sock.readData(withTimeout: -1, tag: -1)
     }
     
-    func socketDidDisconnect(_ sock: GCDAsyncSocket!, withError err: Error!) {
-        DebugManager.log("Socket disconnected: \(err)")
+    func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
+        if let error = err {
+            DebugManager.log("Socket disconnected: \(error)")
+        } else {
+            DebugManager.log("Socket disconnected.")
+        }
         start()
     }
     
-    func socket(_ sock: GCDAsyncSocket!, didRead data: Data!, withTag tag: Int) {
+    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         //        DebugManager.log("Socket read data")
         
         let combinedRawStringData = rawStringBuffer.dataByAppendingData(data)

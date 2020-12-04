@@ -51,6 +51,10 @@ class BeaconServiceFetcher: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     
     // MARK: - NetServiceBrowserDelegate
     
+    func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
+        DebugManager.log("Service browser will search.")
+    }
+    
     func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
         DebugManager.log("Domain browser found domain(\(domainString))")
         let existingBrowersForThisDomain = serviceBrowsers.filter { $0.0 == domainString }

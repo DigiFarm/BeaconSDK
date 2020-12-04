@@ -26,16 +26,16 @@ class SkyplotMarker {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategory.didChangeNotification, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategory.didChangeNotification, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIContentSizeCategory.didChangeNotification, object: nil)
     }
 
     @objc func textSizeChanged(_ notification: Foundation.Notification) {
@@ -118,13 +118,13 @@ class SkyplotMarker {
     
     private var labelFont: UIFont {
         get {
-            return UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
+            return UIFont.preferredFont(forTextStyle: .headline)
         }
     }
     
     private var textGutterWidth: CGFloat {
         get {
-            let letterString = NSAttributedString(string: "W", attributes: [NSFontAttributeName: labelFont])
+            let letterString = NSAttributedString(string: "W", attributes: [.font: labelFont])
             return (max(letterString.size().width, letterString.size().height) * 3)
         }
     }
@@ -180,7 +180,7 @@ class SkyplotMarker {
             
             // Fade at a rounded rate.
             let degree = 90 * Double(i) / Double(elevationLineCount)
-            let radian = degree / 180 * M_PI
+            let radian = degree / 180 * Double.pi
             let invertedAlpha = sin(radian)
             
             lineColor.withAlphaComponent(1 - 0.8 * CGFloat(invertedAlpha)).set()
@@ -191,7 +191,7 @@ class SkyplotMarker {
         
         // Draw cardinal direction letters.
         func drawLabel(_ string: String, atDegree degree: Double) {
-            let letterString = NSAttributedString(string: string, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: lineColor])
+            let letterString = NSAttributedString(string: string, attributes: [.font: labelFont, .foregroundColor: lineColor])
             let letterCenter = azimuthPointForAngle(degree, radius: elevation0Radius + textGutterWidth / 2)
             let size = letterString.size()
             letterString.draw(at: CGPoint(x: letterCenter.x - size.width / 2, y: letterCenter.y - size.height / 2))
@@ -205,7 +205,7 @@ class SkyplotMarker {
     private func azimuthPointForAngle(_ angle: Double, radius: CGFloat) -> CGPoint {
         let center = CGPoint(x: bounds.size.width / 2, y: bounds.size.height / 2)
         
-        let radians = angle / 180 * M_PI
+        let radians = angle / 180 * Double.pi
         
         // sine is positive x
         let xOffset = Double(radius) * sin(radians)
@@ -235,29 +235,29 @@ class SkyplotMarker {
         
         private var markerFont: UIFont {
             get {
-                return UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)
+                return UIFont.preferredFont(forTextStyle: .headline)
             }
         }
         
         private var markerWidth: CGFloat {
             get {
-                let letterString = NSAttributedString(string: "88", attributes: [NSFontAttributeName: markerFont])
+                let letterString = NSAttributedString(string: "88", attributes: [.font: markerFont])
                 return max(letterString.size().width, letterString.size().height) * 1.50
             }
         }
         
         override init(frame: CGRect) {
             super.init(frame: frame)
-            NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategory.didChangeNotification, object: nil)
         }
         
         required init?(coder aDecoder: NSCoder) {
             super.init(coder: aDecoder)
-            NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged(_:)), name: UIContentSizeCategory.didChangeNotification, object: nil)
         }
         
         deinit {
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIContentSizeCategory.didChangeNotification, object: nil)
         }
         
         @objc func textSizeChanged(_ notification: Foundation.Notification) {
@@ -272,7 +272,7 @@ class SkyplotMarker {
             UIBezierPath(rect: bounds).fill()
             
             if let string = string {
-                let attributedString = NSAttributedString(string: string, attributes: [NSFontAttributeName: markerFont, NSForegroundColorAttributeName: UIColor.white])
+                let attributedString = NSAttributedString(string: string, attributes: [.font: markerFont, .foregroundColor: UIColor.white])
                 let stringSize = attributedString.size()
                 let anchorPoint = CGPoint(x: (bounds.size.width - stringSize.width) / 2, y: (bounds.size.height - stringSize.height) / 2)
                 attributedString.draw(at: anchorPoint)

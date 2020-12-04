@@ -30,6 +30,8 @@ extension Stream {
                 return "Closed"
             case .error:
                 return "Error"
+            @unknown default:
+                return "Unknown"
             }
         }
     }
@@ -86,9 +88,9 @@ extension Data {
         var searchRangeLocation = startIndex
         
         while searchRangeLocation < endIndex {
-            let searchRange = Range(searchRangeLocation..<endIndex)
+            let searchRange = searchRangeLocation..<endIndex
             if let separatorRange = range(of: data, options: [], in: searchRange) {
-                let componentRange = Range(searchRange.lowerBound..<separatorRange.lowerBound)
+                let componentRange = searchRange.lowerBound..<separatorRange.lowerBound
                 components.append(subdata(in: componentRange))
                 searchRangeLocation = separatorRange.upperBound
             } else {
@@ -105,7 +107,7 @@ extension Data {
             return false
         }
         
-        let searchRange = Range(index(endIndex, offsetBy: -data.count)..<endIndex)
+        let searchRange = index(endIndex, offsetBy: -data.count)..<endIndex
         
         if range(of: data, options: [], in: searchRange) != nil {
             return true
@@ -132,9 +134,9 @@ extension String {
         
         let data = NSMutableData()
         
-        var currentIndex = characters.startIndex
-        while currentIndex < characters.index(characters.endIndex, offsetBy: -1) {
-            let substring = String(characters[currentIndex..<characters.index(currentIndex, offsetBy: 2)])
+        var currentIndex = startIndex
+        while currentIndex < index(endIndex, offsetBy: -1) {
+            let substring = String(self[currentIndex..<index(currentIndex, offsetBy: 2)])
             
             let scanner = Scanner(string: substring)
             
@@ -148,7 +150,7 @@ extension String {
                 return nil
             }
             
-            currentIndex = characters.index(currentIndex, offsetBy: 2)
+            currentIndex = index(currentIndex, offsetBy: 2)
         }
         
         return data as Data

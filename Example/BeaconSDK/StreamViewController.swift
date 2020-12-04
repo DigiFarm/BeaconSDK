@@ -26,11 +26,11 @@ class StreamViewController: UIViewController {
     private func displayString(_ string: String) {
         let text = textView.text ?? ""
         textView.text = "\(text)\(string)"
-        if textView.text.characters.count > maxTextViewCharacterCount {
-            textView.text = textView.text.substring(from: textView.text.characters.index(textView.text.characters.endIndex, offsetBy: -maxTextViewCharacterCount))
+        if textView.text.count > maxTextViewCharacterCount {
+            textView.text = String(textView.text.suffix(maxTextViewCharacterCount))
         }
         
-        textView.scrollRangeToVisible(NSMakeRange(textView.text.characters.count - 1, 1))
+        textView.scrollRangeToVisible(NSMakeRange(textView.text.count - 1, 1))
         
     }
 }

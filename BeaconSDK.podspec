@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BeaconSDK'
-  s.version          = '0.2.0'
+  s.version          = '0.3.0'
   s.summary          = 'iOS SDK for receiving NMEA data from the DigiFarm NTRIP Client app.'
 
 # This description is used to generate tags and improve search results.
@@ -28,7 +28,7 @@ The DigiFarm NTRIP Client app is used to deliver RTK corrections data to the GRT
   s.source           = { :git => 'https://github.com/DigiFarm/BeaconSDK.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'BeaconSDK/Classes/**/*'
   

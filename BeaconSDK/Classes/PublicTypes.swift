@@ -8,18 +8,18 @@
 
 import CoreLocation
 
-open class GGA: NSObject {
-    open let nmeaString: String
-    open let utcTime: Date?
-    open let latitude: Double?
-    open let longitude: Double?
-    open let gpsQuality: GPSQuality?
-    open let numberOfSVsInUse: Int?
-    open let hdop: Double?
-    open let orthometricHeight: Double?
-    open let geoidSeparation: Double?
-    open let ageOfDifferentialGPSDataRecord: Double?
-    open let referenceStationId: Int?
+public class GGA: NSObject {
+    public let nmeaString: String
+    public let utcTime: Date?
+    public let latitude: Double?
+    public let longitude: Double?
+    public let gpsQuality: GPSQuality?
+    public let numberOfSVsInUse: Int?
+    public let hdop: Double?
+    public let orthometricHeight: Double?
+    public let geoidSeparation: Double?
+    public let ageOfDifferentialGPSDataRecord: Double?
+    public let referenceStationId: Int?
     
     init?(nmeaString: String) {
         self.nmeaString = nmeaString
@@ -111,7 +111,7 @@ open class GGA: NSObject {
         self.init(nmeaString: NMEA.buildGGAStringWithLocation(location))
     }
     
-    override open var description: String {
+    override public var description: String {
         var description = ""
         
         if utcTime != nil {
@@ -206,12 +206,12 @@ open class GGA: NSObject {
     }
 }
 
-open class VTG: NSObject {
-    open let nmeaString: String
-    open let trueTrackMadeGoodDegrees: Double?
-    open let magneticTrackMadeGoodDegrees: Double?
-    open let speedOverGroundInKnots: Double?
-    open let speedOverGroundInKilometersPerHour: Double?
+public class VTG: NSObject {
+    public let nmeaString: String
+    public let trueTrackMadeGoodDegrees: Double?
+    public let magneticTrackMadeGoodDegrees: Double?
+    public let speedOverGroundInKnots: Double?
+    public let speedOverGroundInKilometersPerHour: Double?
     
     init?(nmeaString: String) {
         self.nmeaString = nmeaString
@@ -254,7 +254,7 @@ open class VTG: NSObject {
         super.init()
     }
     
-    override open var description: String {
+    override public var description: String {
         var description = ""
         
         if trueTrackMadeGoodDegrees != nil {
@@ -277,11 +277,11 @@ open class VTG: NSObject {
     }
 }
 
-open class GSVSatellite: NSObject {
-    open let prnNumber: Int
-    open let elevationDegree: Int
-    open let azimuthDegree: Int
-    open let signalToNoiseRatio: Int?
+public class GSVSatellite: NSObject {
+    public let prnNumber: Int
+    public let elevationDegree: Int
+    public let azimuthDegree: Int
+    public let signalToNoiseRatio: Int?
     
     init(prnNumber: Int, elevationDegree: Int, azimuthDegree: Int, signalToNoiseRatio: Int?) {
         self.prnNumber = prnNumber
@@ -290,7 +290,7 @@ open class GSVSatellite: NSObject {
         self.signalToNoiseRatio = signalToNoiseRatio
     }
     
-    override open var description: String {
+    override public var description: String {
         var description = ""
         
         description += "prnNumber = \(prnNumber)\n"
@@ -305,12 +305,12 @@ open class GSVSatellite: NSObject {
     }
 }
 
-open class GSV: NSObject {
-    open let nmeaString: String
-    open let totalNumberOfMessagesInThisCycle: Int?
-    open let messageNumber: Int?
-    open let totalNumberOfSVsVisible: Int?
-    open let gsvSatellites: [GSVSatellite]?
+public class GSV: NSObject {
+    public let nmeaString: String
+    public let totalNumberOfMessagesInThisCycle: Int?
+    public let messageNumber: Int?
+    public let totalNumberOfSVsVisible: Int?
+    public let gsvSatellites: [GSVSatellite]?
     
     
     init?(nmeaString: String) {
@@ -381,7 +381,7 @@ open class GSV: NSObject {
         super.init()
     }
     
-    override open var description: String {
+    override public var description: String {
         var description = ""
         
         if totalNumberOfMessagesInThisCycle != nil {
